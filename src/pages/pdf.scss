@@ -1,0 +1,50 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body takes up the full viewport height */
+  }
+
+@media print{
+    @page {
+        size: a4
+    }
+    .table-bordered{
+        border: 2px solid black !important;
+        font-size: larger;
+    }
+
+    
+}
+.Pdflogo{
+    height: 77px;
+}
+.pdftitle {
+    // margin-left: 167px;
+    font-size: 33px;
+    color: #800000;
+    text-transform: uppercase;
+}
+
+.table-bordered{
+    border: 2px solid black !important;
+    font-size: medium;
+}
+.sign{
+   
+    bottom: 79px;
+}
+.sideTitle{
+    font-size: large;
+}
+.image-container {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.full-width-image {
+    width: 100%;
+    height: auto; /* Ensures the aspect ratio is maintained */
+    max-width: 100%;
+    height: auto;
+    image-rendering: auto;
+}

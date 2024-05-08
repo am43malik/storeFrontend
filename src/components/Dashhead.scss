@@ -1,0 +1,78 @@
+@import "../App.scss";
+
+
+
+.dashhead{
+    height: 100vh;
+    // background: linear-gradient(to bottom right,#8c57c0, #5a1e96);
+    background-color: #16183E;
+    h1{
+        text-align: center;
+        color: white;
+        padding-top: 5%;
+    }
+    .menu-container{
+        padding:5%;
+        margin: 2% 0 0 10%;
+        color:#cccf;
+    }
+    .menu-container:hover{
+        background: linear-gradient(to bottom right, #eedeff2c,#faf5ff2c);
+        cursor: pointer;
+    }
+
+    .menu-container-active{
+        transform: scale(1.05);
+        padding:5%;
+        margin: 2% 0 0 10%;
+        color:white;
+        background: linear-gradient(to bottom right, #eedeff2c,#faf5ff2c);
+    }
+    .menu-container-active:hover{
+        cursor: pointer;
+    }
+}
+
+
+@media (max-width: 992px) {
+
+}
+@media (max-width: 768px) {
+
+
+}
+@media (max-width: 576px) {
+    .dashhead{
+      position: absolute;
+      z-index: 1;
+      width: 50%;
+    }
+
+    .displayhidden{
+        display: none;
+    }
+
+}
+
+.logo{
+    width: 100px;
+    // margin-bottom: 20px;
+    margin-left: 58px;
+    // margin-top: 22px;
+    cursor: pointer;
+}
+#sidebar-wrapper {
+    height: 100vh; /* Add height */
+    overflow-y: auto;  /* Add overflow-y */
+    overflow-x: hidden;  /* Add overflow-x */
+    /* min-height: 100vh; */
+
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+.stockout{
+    filter: brightness(100%) invert(100%);
+  
+}

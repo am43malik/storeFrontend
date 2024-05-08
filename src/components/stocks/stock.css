@@ -1,0 +1,49 @@
+.icondiv{
+display:flex;
+justify-content: flex-end;
+margin-right: 24px;
+bottom: 34px;
+}
+
+
+.exporticon{
+    font-size: 34px !important;
+    cursor:pointer;
+}
+.icondivright{
+    display:flex;
+justify-content: flex-start;
+margin-right: 24px;
+bottom: 34px;
+    /* background-color: black; */
+    border-radius: 10px;
+}
+.badgefont{
+    font-size: 15px;
+}
+/* suggestions.css */
+
+.suggestions {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .suggestion {
+    padding: 8px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    color: #333;
+  }
+  .tabel_itemcode{
+    font-size: 13px;
+  }
+  .tabel_itemcode_total{
+    font-size: 13px;
+    margin-left: 60px;
+  }

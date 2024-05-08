@@ -1,0 +1,123 @@
+/* login.scss */
+
+.login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #16183E; /* Set navbar side color */
+}
+
+.container {
+  transition: transform 0.5s ease; /* Add transition for the container */
+}
+
+/* Add a class to trigger the cut-center animation */
+.cut-center {
+  transform: translateX(-50%);
+}
+
+.login-form {
+  background-color: #ffffff; /* Set your desired form background color */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  transition: transform 0.5s ease; /* Add transition for the form */
+}
+
+.login-form.hidden {
+  transform: translateX(-100%); /* Slide the form out of view */
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2E96C3; /* Set text color */
+}
+
+.login-form .form-group {
+  margin-bottom: 20px;
+}
+
+.login-form label {
+  color: #495057;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.login-form input[type="email"]:focus,
+.login-form input[type="password"]:focus {
+  border-color: #2E96C3;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(46, 150, 195, 0.25);
+}
+
+.login-form button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #2E96C3; /* Set button background color */
+  color: #ffffff;
+  font-weight: bold;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #0078A8; /* Set button hover background color */
+}
+
+.undraw-illustration {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Animation for the image */
+.login-animation {
+  overflow: hidden;
+}
+
+.undraw-illustration-animation {
+  animation: slideLeft 2s ease forwards;
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.tharb_heading {
+  background-color: #16183E;
+  padding: 20px;
+}
+
+.tharb_heading h1 {
+  font-size: 50px;
+  white-space: nowrap; /* Ensure text doesn't wrap */
+  overflow: hidden; /* Hide overflow text */
+  width: 0; /* Start with zero width for animation */
+  animation: revealText 3s forwards; /* Animation effect */
+  color: #D77033;
+}
+
+@keyframes revealText {
+  from {
+      width: 0; /* Start from zero width */
+  }
+  to {
+      width: 100%; /* Fully reveal the text */
+  }
+}
