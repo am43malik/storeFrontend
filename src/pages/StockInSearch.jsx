@@ -217,7 +217,7 @@ const handleExport = () => {
       <Autocomplete
         multiple
         id="tags-outlined"
-        options={allProducts}
+        options={allProducts.filter(product => product.department === selectedDepartment)}
         value={product}
         sx={{ width: 400 }}
         onChange={handleProductChange}

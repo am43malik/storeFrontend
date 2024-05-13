@@ -51,6 +51,40 @@ const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbW
     ]
 
 
+    const handelDepatment =(value)=>{
+      setSelectedDepartment(value)
+      
+      console.log(value,"Here i am cheack")
+      const getAllProducts =(value)=>{
+    
+        axios
+          .get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`, {
+            headers: { token: accessToken },
+          })
+          .then(res=>{
+            let arr = res.data.result.map((item,index)=>{
+              const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
+              fieldsToCheck.forEach(field=>{
+                if(item.itemCode.includes(item[field])){
+                  item.itemCode = item.itemCode.replace(item[field],'')
+                }
+              })
+              return {...item, id:index +1}
+            })
+      
+            let filteredProducts = arr;
+            if (value) {
+              console.log(value,'selectedDepartment')
+              filteredProducts = arr.filter(product => product.department === value);
+            }
+      
+            setAllProducts(filteredProducts)
+            console.log(filteredProducts,'filteredProducts')
+          })
+      }
+      getAllProducts()
+    }
+
     // ================================================================post api code========================================================================================
 
 const onSubmit = async(data,event) => {
@@ -148,6 +182,7 @@ useEffect(() => {
   })
  getAllMember()
  getAllProducts()
+ handelDepatment()
 }, [flag]);
 
 
@@ -253,17 +288,16 @@ const handelDeleterow = async(deleteRow)=>{
                       }} 
                     /></div>
                     <div className="col-auto"> 
-                     <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    getOptionLabel={(department)=>department.name}
-                     options={department}
-                     onChange={(event,value)=>{
-                      setSelectedDepartment(value.name)
-                     }}
-                    sx={{ width: 180 }}
-                    renderInput={(params) => <TextField {...params} label="Department" />}
-                    />
+                    <Autocomplete
+  disablePortal
+  id="combo-box-demo"
+  options={department}
+  getOptionLabel={(e)=>e.name}
+  onChange={(e,value)=>handelDepatment(value?.name)}
+  sx={{ width: 300 }}
+  renderInput={(params) => <TextField {...params} label="Department" />}
+/>
+
                     </div>
                     <div className="col-auto">
                     <Autocomplete
@@ -271,7 +305,7 @@ const handelDeleterow = async(deleteRow)=>{
                     id="combo-box-demo"
                     // getOptionLabel={(product)=>product.itemCode}
                     getOptionLabel={(product)=>`${product.itemCode} ${product.productName} ${product.lotNumber}`}
-                     options={allProducts}
+                    options={allProducts.filter(product => product.department === selectedDepartment)}
                     sx={{ width: 400 }}
                     renderInput={(params) => <TextField {...params} label="Select item code,Product name" required/>}
                     onChange={(event, newValue) => {

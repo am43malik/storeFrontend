@@ -262,7 +262,7 @@ useEffect(()=>{
         >
 
           <MenuItem value="TCGC">TCGC</MenuItem>
-          <MenuItem value="Microbiology">MICROBIOLOGY</MenuItem>
+          <MenuItem value="MICROBIOLOGY">MICROBIOLOGY</MenuItem>
           <MenuItem value="HEAMOTOLGY">HEAMOTOLGY</MenuItem>
           <MenuItem value="BIOCHEMISTRY">BIOCHEMISTRY</MenuItem>
           <MenuItem value="HPLC">HPLC</MenuItem>

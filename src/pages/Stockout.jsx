@@ -198,26 +198,25 @@ const handelDeleterow = async(deleteRow)=>{
 }
 
 // ===========================================All product & All stock api ==========================================================================================
-
-const getAllProducts =()=>{
-  axios
-    .get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`, {
-      headers: { token: accessToken },
-    })
-    .then(res=>{
-      let arr = res.data.result.map((item,index)=>{
-        const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
-        fieldsToCheck.forEach(field=>{
-          if(item.itemCode.includes(item[field])){
-            item.itemCode = item.itemCode.replace(item[field],'')
-          }
-        })
-        return {...item, id:index +1}
+const getAllProducts = ()=>{
+  axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`,{headers:{token:`${accessToken}`}})
+  .then(res=>{
+    let arr = res.data.result.map((item,index)=>{
+      const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
+      fieldsToCheck.forEach(field=>{
+        if(item.itemCode.includes(item[field])){
+          item.itemCode = item.itemCode.replace(item[field],'')
+        }
       })
-      setAllProducts(arr)
-      console.log(arr)
+      return {...item, id:index +1}
     })
+    setAllProducts(arr)
+    console.log(arr)
+  })
 }
+
+
+
 
 const getAllStocks=(value)=>{
   axios
@@ -253,14 +252,55 @@ const handleProducts = (val) => {
 // }
 // ===========================================Auto complete handel Deparment==========================================================================================
 
+
 const handelDepatment =(value)=>{
-  getAllProducts()
-  getAllStocks(value) 
   setSelectedDepartment(value)
-  setSelectedProduct(null)
-  setSelectedExpiry(null)
+
+    setSelectedProduct(null)
+    setSelectedExpiry(null)
+    console.log(value,"Here i am cheack")
+  
+    // getAllProducts(value)
+    getAllStocks(value) 
   console.log(value,"Here i am cheack")
+  const getAllProducts =(value)=>{
+
+    axios
+      .get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`, {
+        headers: { token: accessToken },
+      })
+      .then(res=>{
+        let arr = res.data.result.map((item,index)=>{
+          const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
+          fieldsToCheck.forEach(field=>{
+            if(item.itemCode.includes(item[field])){
+              item.itemCode = item.itemCode.replace(item[field],'')
+            }
+          })
+          return {...item, id:index +1}
+        })
+  
+        let filteredProducts = arr;
+        if (value) {
+          console.log(value,'selectedDepartment')
+          filteredProducts = arr.filter(product => product.department === value);
+        }
+  
+        setAllProducts(filteredProducts)
+        console.log(filteredProducts,'filteredProducts')
+      })
+  }
+  getAllProducts(value)
 }
+// const handelDepatment =(value)=>{
+//   setSelectedDepartment(value)
+//   setSelectedProduct(null)
+//   setSelectedExpiry(null)
+//   console.log(value,"Here i am cheack")
+
+//   getAllProducts(value)
+//   getAllStocks(value) 
+// }
 // ==========================================================send print button data ==========================================================================================
 
 const handelPrintData=()=>{
@@ -360,6 +400,7 @@ const handelPrintData=()=>{
                     getOptionLabel={(e)=>e.memberName}
                      options={allMember}
                      onChange={(e,val)=>{
+                      
                       setSelectedMember(val)
                      }}
                     sx={{ width: 250 }}
@@ -367,18 +408,18 @@ const handelPrintData=()=>{
                     />
                     </div>
                     <div className="col-auto"> 
-                     <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={department}
-                    getOptionLabel={(e)=>e.name}
-                      // onChange={(e,val)=>{
-                      //   setSelectedDepartment(val.name)
-                      // }}
-                      onChange={(e,value)=>handelDepatment(value?.name)}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField {...params} label="Department" />}
-                    />
+                    
+                    <Autocomplete
+  disablePortal
+  id="combo-box-demo"
+  options={allMember.filter(member => member.memberName === selectedMember?.memberName)}
+  getOptionLabel={(e) => e.department}
+  onChange={(e, value) => handelDepatment(value.department)}
+  sx={{ width: 300 }}
+  renderInput={(params) => <TextField {...params} label="Department" />}
+/>
+
+
                     </div>
                     <div className="col-auto"> 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -400,20 +441,20 @@ const handelPrintData=()=>{
                 <div className="row my-3 d-flex flex-row ">
                     <div className="col-auto">
                    
-                  <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={[ ...allProducts]}
-        
-            getOptionLabel={(e) =>`${e.itemCode} ${e.productName}`}
-          isSearchable
-          value={selectedProduct}
-          onChange={(e,val)=>handleProducts(val)}
-          sx={{ width: 580 }}
-          renderInput={(params) => (
-            <TextField {...params} label="Product List" />
-          )}
-        />
+                    <Autocomplete
+  disablePortal
+  id="combo-box-demo"
+  options={allProducts.filter(product => product.department === selectedDepartment)}
+  getOptionLabel={(e) =>`${e.itemCode} ${e.productName}`}
+  isSearchable
+  value={selectedProduct}
+  onChange={(e,val)=>handleProducts(val)}
+  sx={{ width: 580 }}
+  renderInput={(params) => (
+    <TextField {...params} label="Product List" />
+  )}
+/>
+
                     </div>
                     <div className="col-auto">
                       <TextField id='outlined-basic' label="Quantity" type='number' sx={{width:120}} required    {...register("quantity", { required: true })}>
