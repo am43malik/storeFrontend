@@ -77,7 +77,7 @@ console.log(selectedDepartment)
 const departments = [
   { id: 8, name: 'All', },
   { id: 1, name: 'TCGC',  },
-  { id: 2, name: 'Microbiology'},
+  { id: 2, name: 'MICROBIOLOGY'},
   { id: 3, name: 'BIOCHEMISTRY', },
   { id: 4, name: 'HPLC' },
   { id: 5, name: 'AAS',  },
@@ -422,8 +422,8 @@ const handelClick = ()=>{
         >
 
           <MenuItem value="TCGC">TCGC</MenuItem>
-          <MenuItem value="Microbiology">MICROBIOLOGY</MenuItem>
-          <MenuItem value="Parasitology">HEAMOTOLGY</MenuItem>
+          <MenuItem value="MICROBIOLOGY">MICROBIOLOGY</MenuItem>
+          <MenuItem value="HEAMOTOLGY">HEAMOTOLGY</MenuItem>
           <MenuItem value="BIOCHEMISTRY">BIOCHEMISTRY</MenuItem>
           <MenuItem value="HPLC">HPLC</MenuItem>
           <MenuItem value="AAS">AAS</MenuItem>
