@@ -289,14 +289,14 @@ const handelDeleterow = async(deleteRow)=>{
                     /></div>
                     <div className="col-auto"> 
                     <Autocomplete
-  disablePortal
-  id="combo-box-demo"
-  options={department}
-  getOptionLabel={(e)=>e.name}
-  onChange={(e,value)=>handelDepatment(value?.name)}
-  sx={{ width: 300 }}
-  renderInput={(params) => <TextField {...params} label="Department" />}
-/>
+                  disablePortal
+                  id="combo-box-demo"
+                  options={department}
+                  getOptionLabel={(e)=>e.name}
+                  onChange={(e,value)=>handelDepatment(value?.name)}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => <TextField {...params} label="Department" />}
+                />
 
                     </div>
                     <div className="col-auto">
@@ -305,7 +305,8 @@ const handelDeleterow = async(deleteRow)=>{
                     id="combo-box-demo"
                     // getOptionLabel={(product)=>product.itemCode}
                     getOptionLabel={(product)=>`${product.itemCode} ${product.productName} ${product.lotNumber}`}
-                    options={allProducts.filter(product => product.department === selectedDepartment)}
+                    // options={allProducts.filter(product => product.department === selectedDepartment)}
+                    options={allProducts}
                     sx={{ width: 400 }}
                     renderInput={(params) => <TextField {...params} label="Select item code,Product name" required/>}
                     onChange={(event, newValue) => {

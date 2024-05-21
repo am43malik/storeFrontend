@@ -12,7 +12,8 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import Dashhead from '../Dashhead';
 import Darkmode from '../Darkmode';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Geneticstock = () => {
   const dispatch = useDispatch();
@@ -123,7 +124,7 @@ const Geneticstock = () => {
       }
     });
   };
-
+ 
   const handleExport = () => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -229,11 +230,36 @@ const updateStockSettings = async (id, start, end, startColor, endColor) => {
 const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
   try {
     await updateStockSettings(id, start, end, startColor, endColor);
-    // Handle success
+
+  toast("Range update successfully", {
+    position: "top-center",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  });
+ 
+ 
+
+
+ 
   } catch (error) {
-    // Handle error
+    toast("Something went wrong", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
   }
 };
+
 
 
 
@@ -248,6 +274,7 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
       </div>
       <div className="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 dashboard-container">
         <h1 className="my-5 title text-center">Genetic Stock</h1>
+        <ToastContainer/>
         <div className='icondivright'>
           <Tooltip title="Back">
             <ArrowBackIcon className='exporticon' onClick={() => { history.push("/stock") }} />
@@ -289,7 +316,10 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
         </div>
       )}
     </div>
+<div className='text-right my-3'>
+<b>Note: After adding the range, don't forget to update the Range button</b>
 
+</div>
        
 
         <table className="table">
@@ -324,33 +354,38 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
         <td>
   <input
     type="number"
+    style={{width:"100px", borderRadius:"50px"}}
+   
     placeholder="Start Range"
     value={rowSettings[index]?.start || ''}
     onChange={(e) => handleSettingsChange(index, parseInt(e.target.value), rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
   />
   <input
+  className='mr-3'
     type="color"
     value={rowSettings[index]?.startColor || ''}
     onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, e.target.value, rowSettings[index]?.endColor)}
   />
   <input
+ style={{width:"100px", borderRadius:"50px"}}
     type="number"
     placeholder="End Range"
     value={rowSettings[index]?.end || ''}
     onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, parseInt(e.target.value), rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
   />
   <input
+ 
     type="color"
     value={rowSettings[index]?.endColor || ''}
     onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, e.target.value)}
   />
-  <button onClick={() => handleUpdateSettings(item._id, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}>Update Settings</button>
+  <Button variant='contained'size="small" className='ml-3' onClick={() => handleUpdateSettings(item._id, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}>Update Range</Button>
 </td>
 
       </tr>
       {showExtraRow && (
         <tr>
-          <td colSpan="7">Total Quantity for item code <span className="badge badge-primary tabel_itemcode">{item.itemCode.split(' ')[0]} </span>:  <span className="badge badge-success tabel_itemcode_total">{totalsByCode[code]}</span></td>
+          <td colSpan="9">Total Quantity for item code <span className="badge badge-primary tabel_itemcode">{item.itemCode.split(' ')[0]} </span>:  <span className="badge badge-success tabel_itemcode_total">{totalsByCode[code]}</span></td>
         </tr>
       )}
     </React.Fragment>

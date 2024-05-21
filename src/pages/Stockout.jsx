@@ -376,9 +376,9 @@ const handelPrintData=()=>{
                      onChange={(e,val)=>{
                      
                       setSelectedMember(val)
-                      setSelectedDepartment(val.department)
-                      getAllProducts(val.department)
-                     getAllStocks(val.department)
+                      setSelectedDepartment(val?.department)
+                      getAllProducts(val?.department)
+                     getAllStocks(val?.department)
                      }}
                     sx={{ width: 250 }}
                     renderInput={(params) => <TextField {...params} label="Members"  required/>}
@@ -387,15 +387,15 @@ const handelPrintData=()=>{
                     <div className="col-auto"> 
                     
                     <Autocomplete
-  disablePortal
-  id="combo-box-demo"
-  options={allMember.filter(member => member.memberName === selectedMember?.memberName)}
-  getOptionLabel={(e) => e.department == undefined? e : e.department}
-  value={selectedDepartment}
-  onChange={(e, value) => handelDepatment(value.department)}
-  sx={{ width: 300 }}
-  renderInput={(params) => <TextField {...params} label="Department" />}
-/>
+                    disablePortal
+                    id="combo-box-demo"
+                    options={allMember.filter(member => member.memberName === selectedMember?.memberName)}
+                    getOptionLabel={(e) => e.department == undefined? e : e.department}
+                    value={selectedDepartment}
+                    onChange={(e, value) => handelDepatment(value?.department)}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} label="Department" />}
+                  />
 
 
                     </div>
