@@ -27,6 +27,7 @@ import Orderpdf from './components/Order/Orderpdf';
 import Login from './components/login/Login';
 import Departmetnlils from './components/Department list/Departmetnlils';
 import Orderdetailspdf from './components/Order/Orderdetailspdf';
+import Discardpdf from './pages/Discardpdf';
  export const ThemeContext = createContext();
 function App() {
 
@@ -80,6 +81,8 @@ function App() {
      <Route exact path="/Departmetnlils" component={Departmetnlils} />
      <Route exact path="/Orderdetailspdf" component={Orderdetailspdf} />
     
+     {/*===================================Discard section ================================================================================ */}
+     <Route exact path="/Discardpdf" component={Discardpdf} />
 
         </Switch>
     </ThemeContext.Provider>
