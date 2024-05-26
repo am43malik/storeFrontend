@@ -110,19 +110,42 @@ const fetchData = async () => {
 
 
 // ===============================================Member api=============================================================
-const getAllMember = ()=>{
-  axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/member/getAllMember/`,{headers:{token:`${accessToken}`}})
-  .then(res=>{
-    setAllMember(res.data.result)
+// const getAllMember = ()=>{
+//   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/member/getAllMember/`,{headers:{token:`${accessToken}`}})
+//   .then(res=>{
+//     setAllMember(res.data.result)
+
+//     console.log(allMember)
     
-  })
+//   })
+// }
+
+
+const getAllMember = () => {
+  axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/member/getAllMember/`, { headers: { token: `${accessToken}` } })
+    .then(res => {
+      const allMembers = res.data.result;
+      // Filter member names
+      const filteredMembers = allMembers.filter(member => 
+        member.memberName === "DR. HASSEB" || 
+        member.memberName === "REDA ALI" || 
+        member.memberName === "DR. MUTHU" ||
+        member.memberName === "DR. MARWA" ||
+        member.memberName === "DR. SHIMOS" 
+      );
+      setAllMember(filteredMembers);
+    })
+    .catch(error => {
+      console.error('Error fetching members:', error);
+    });
 }
-console.log(member.department,'llll')
+
+console.log(member?.department,'llll')
 
 useEffect(() => {
   fetchData()
   getAllMember()
-  if (member.department) {
+  if (member?.department) {
     if (member.department === 'MICROBIOLOGY') {
       setItemcode('Mic_');
     } else if (member.department === 'PARASITOLOGY') {
@@ -135,7 +158,7 @@ useEffect(() => {
       setItemcode('Main_');
     }
   }
-}, [member.department]);
+}, [member?.department]);
   return (
     <div className="row">
     <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
@@ -159,7 +182,7 @@ useEffect(() => {
           order list </h1>
 
 
-          {member.department && (
+          {member?.department && (
     <h4> itemCode :{itemcode} {itemnumber}</h4>
   )}
     
@@ -181,7 +204,7 @@ useEffect(() => {
                     getOptionLabel={(memberName)=>`${memberName.memberName} ${memberName.department}`}
                    onChange={(ev,val)=>{
                     setMember(val)
-                    setItemcode(member.department)
+                    setItemcode(member?.department)
                    }}
                     renderInput={(params) => <TextField {...params} label="Select member" required/>}
 

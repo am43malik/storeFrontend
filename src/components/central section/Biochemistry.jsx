@@ -1,6 +1,7 @@
 
+
 import React, { useEffect, useState } from 'react'
-// import './stock.css';
+
 import axios from 'axios';
 import moment from 'moment';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
@@ -13,7 +14,8 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import Dashhead from '../Dashhead';
 import Darkmode from '../Darkmode';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Biochemistry = () => {
   const dispatch = useDispatch();
@@ -22,17 +24,14 @@ const Biochemistry = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [rowSettings, setRowSettings] = useState(() => {
-    // Initialize row settings from local storage, or with default values
-    const savedSettings = localStorage.getItem('rowSettings');
-    return savedSettings ? JSON.parse(savedSettings) : [];
-  });
+  const [rowSettings, setRowSettings] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   const uniqueItemCodes = [...new Set(data.map(item => item.itemCode))];
-  const url = process.env.REACT_APP_DEVELOPMENT;
-  const accessToken = "your_access_token_here";
+  const url = process.env.REACT_APP_DEVELOPMENT
 
+
+  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo"
 
 
   console.log(data,'data')
@@ -61,7 +60,8 @@ const Biochemistry = () => {
         const response = await axios.get(`${url}/api/stock/getAllStocks/BIOCHEMISTRY`, {
           headers: { token: accessToken }
         });
-        let newData = response.data.result.map((item, index) => {
+  
+        const newData = response.data.result.map((item, index) => {
           // Check if expiryArray exists and is an array before using it
           const totalQuantity = Array.isArray(item.expiryArray) 
             ? item.expiryArray.reduce((acc, curr) => acc + curr.quantity, 0)
@@ -72,7 +72,7 @@ const Biochemistry = () => {
   
           const cleanItemCode = item.product && item.product.itemCode
             ? item.product.itemCode.replace(new RegExp(item.product.supplierName || '', 'g'), '').trim()
-            : 'Unknown Code'; // Default or fallback code if product or itemCode is not available
+            : 'ProductDeleted '; // Default or fallback code if product or itemCode is not available
   
           return {
             ...item,
@@ -89,11 +89,18 @@ const Biochemistry = () => {
         console.error('Error fetching Biochemistry stock data:', error);
       }
     };
-
-    localStorage.setItem('rowSettings', JSON.stringify(rowSettings));
   
     fetchData();
-  }, [url, accessToken,rowSettings]);
+  }, [url, accessToken]);
+  
+  useEffect(() => {
+    const updatedRowSettings = data.map(item => {
+      const existingSetting = rowSettings.find(setting => setting.id === item._id);
+      return existingSetting || { id: item._id, start: item.start, end: item.end, startColor: item.startColor, endColor: item.endColor };
+    });
+    setRowSettings(updatedRowSettings);
+  }, [data]); // Only run this effect when `data` changes
+  
   
   const sortData = (dataToSort) => {
     let sortedData = [...dataToSort]; // Creating a copy of the original array
@@ -119,7 +126,7 @@ const Biochemistry = () => {
       }
     });
   };
-
+ 
   const handleExport = () => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
@@ -180,21 +187,84 @@ const Biochemistry = () => {
   
   const lastIndexes = calculateLastIndexes(currentData);
 
-  const handleSettingsChange = (index, start, end, color) => {
+  const handleSettingsChange = (index, start, end, startColor, endColor) => {
     setRowSettings(prevSettings => {
       const updatedSettings = [...prevSettings];
-      updatedSettings[index] = { start, end, color };
+      updatedSettings[index] = {
+        start: start,
+        end: end,
+        startColor: startColor,
+        endColor: endColor
+      };
       return updatedSettings;
     });
   };
 
   const getColorForIndex = (index, quantity) => {
     const settings = rowSettings[index];
-    if (settings && quantity <= settings.start ) {
-      return settings.color || 'transparent';
+    if (settings && quantity <= settings.start && quantity >= settings.end) {
+        return settings.startColor || 'transparent';
+    } else if (settings && quantity <= settings.start) {
+        return settings.endColor || 'transparent';
+    } else {
+        return 'transparent'; // Default color if no range matches
     }
-    return 'transparent'; // Default color if no range matches
-  };
+};
+
+const updateStockSettings = async (id, start, end, startColor, endColor) => {
+  const obj ={
+    id:id,
+    start: start,
+    end: end,
+    startColor: startColor,
+    endColor: endColor
+  }
+  try {
+    const response=  await axios.put(`${process.env.REACT_APP_DEVELOPMENT}/api/stock/updateStockSettings`, {...obj},
+    {headers:{token:`${accessToken}`}})
+      return response.data;
+  } catch (error) {
+      console.error(error);
+      throw error;
+  }
+};
+
+const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
+  try {
+    await updateStockSettings(id, start, end, startColor, endColor);
+
+  toast("Range update successfully", {
+    position: "top-center",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  });
+ 
+ 
+
+
+ 
+  } catch (error) {
+    toast("Something went wrong", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+};
+
+
+
+
 
   const filteredData = currentData.filter(item => item.itemCode.toLowerCase().includes(searchQuery.toLowerCase()));
 
@@ -206,9 +276,10 @@ const Biochemistry = () => {
       </div>
       <div className="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 dashboard-container">
         <h1 className="my-5 title text-center">Biochemistry Stock</h1>
+        <ToastContainer/>
         <div className='icondivright'>
           <Tooltip title="Back">
-            <ArrowBackIcon className='exporticon' onClick={() => { history.push("/stock") }} />
+            <ArrowBackIcon className='exporticon' onClick={() => { history.push("/Centralsection") }} />
           </Tooltip>
         </div>
         <div className='icondiv'>
@@ -247,7 +318,10 @@ const Biochemistry = () => {
         </div>
       )}
     </div>
+<div className='text-right my-3'>
+<b>Note: After adding the range, don't forget to update the Range button</b>
 
+</div>
        
 
         <table className="table">
@@ -273,39 +347,56 @@ const Biochemistry = () => {
       <tr style={{ backgroundColor: rowColor }}>
         <th scope="row">{index + 1}</th>
         <td>{item.itemCode.split(' ')[0]}</td>
-        
         <td>{new Date(item.expiryArray[0].expiry).toLocaleDateString('en-GB')}</td>
-      {console.log(new Date(item.expiryArray[0].expiry).toLocaleDateString('en-GB'))}
-    {/* {    console.log( new Date (item.expiryArray[0].expiry).toLocaleDateString('en-GB')} */}
         <td>{item.totalQuantity}</td>
         <td>{item.product?.productName}</td>
         <td>{item.product?.sku}</td>
         <td>{item.product?.lotNumber}</td>
         <td>{item.product?.manufacturer}</td>
         <td>
-          <input
-            type="number"
-            placeholder="Start Range"
-            value={rowSettings[index]?.start || ''}
-            onChange={(e) => handleSettingsChange(index, parseInt(e.target.value), rowSettings[index]?.end, rowSettings[index]?.color)}
-          />
-          <input
-            type="color"
-            value={rowSettings[index]?.color || ''}
-            onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, e.target.value)}
-          />
-        </td>
+  <input
+    type="number"
+    style={{width:"100px", borderRadius:"50px"}}
+   
+    placeholder="Start Range"
+    value={rowSettings[index]?.start || ''}
+    onChange={(e) => handleSettingsChange(index, parseInt(e.target.value), rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
+  />
+  <input
+  className='mr-3'
+    type="color"
+    value={rowSettings[index]?.startColor || ''}
+    onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, e.target.value, rowSettings[index]?.endColor)}
+  />
+  <input
+ style={{width:"100px", borderRadius:"50px"}}
+    type="number"
+    placeholder="End Range"
+    value={rowSettings[index]?.end || ''}
+    onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, parseInt(e.target.value), rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
+  />
+  <input
+ 
+    type="color"
+    value={rowSettings[index]?.endColor || ''}
+    onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, e.target.value)}
+  />
+  <Button variant='contained'size="small" className='ml-3' onClick={() => handleUpdateSettings(item._id, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}>Update Range</Button>
+</td>
+
       </tr>
       {showExtraRow && (
-        <tr> 
- 
-          <td colSpan="7">Total Quantity for item code <span class="badge badge-primary tabel_itemcode">{item.itemCode.split(' ')[0]} </span>:  <span class="badge badge-success  tabel_itemcode_total">{totalsByCode[code]}</span></td>
-          
+        <tr>
+          <td colSpan="9">Total Quantity for item code <span className="badge badge-primary tabel_itemcode">{item.itemCode.split(' ')[0]} </span>:  <span className="badge badge-success tabel_itemcode_total">{totalsByCode[code]}</span></td>
         </tr>
       )}
     </React.Fragment>
   );
 })}
+
+
+
+
 
 </tbody>
 
@@ -336,7 +427,6 @@ const Biochemistry = () => {
 };
 
 export default Biochemistry;
-
 
 
 

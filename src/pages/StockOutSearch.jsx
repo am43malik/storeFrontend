@@ -185,10 +185,10 @@ const handleExport = () => {
    <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    getOptionLabel={(member)=>member.name}
+                    getOptionLabel={(member)=>member?.name}
                       options={department}
                      onChange={(event,value)=>{
-                      setSelectedDepartment(value.name)
+                      setSelectedDepartment(value?.name)
                      }}
                     sx={{ width: 180 }}
                     renderInput={(params) => <TextField {...params} label="Department" />}
@@ -215,7 +215,8 @@ const handleExport = () => {
       <Autocomplete
         multiple
         id="tags-outlined"
-        options={allProducts.filter(product => product.department === selectedDepartment)}
+        // options={allProducts.filter(product => product.department === selectedDepartment)}
+        options={allProducts}
         value={product}
         sx={{ width: 400 }}
         onChange={handleProductChange}
